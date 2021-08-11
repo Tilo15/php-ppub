@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/(.*)?$  index.php?ppub=$1&asset=$2    [L,QSA]
