@@ -13,7 +13,8 @@ function index_start() {
         <link rel="alternate" type="application/rss+xml" title="<?php echo(SITE_NAME);?> RSS Feed" href="/feed.rss" />
     </head>
     <body>
-        <h1><?php echo(SITE_NAME);?> <?php echo(PUBLICATION_NAME)?> Index</h1>
+        <h1><?php echo(SITE_NAME);?></h1>
+        <h2><?php echo(PUBLICATION_NAME)?> Index</h2>
         <dl>
     <?php
 }

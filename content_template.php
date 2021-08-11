@@ -26,8 +26,8 @@ function content_end($ppub) {
     ?>
     <footer role="contentinfo">
         <hr>
-        <p><strong><?php echo(htmlentities($ppub->metadata["title"]));?></strong><br/>Post authored by <?php echo(htmlentities($ppub->metadata["author"]));?>.<br/><a href="/">Return to <?php echo(PUBLICATION_NAME);?> Index</a> | <a href="/feed.rss">Subscribe to <?php echo(SITE_NAME);?> RSS</a> | <a href="?download=true">Download <?php echo(PUBLICATION_NAME);?> PPUB</a></p>
-        <p><br/><small>Powered by php-ppub, styled with <a href="https://vanillacss.com/">Vanilla CSS</a>.</small></p>
+        <p><strong><?php echo(htmlentities($ppub->metadata["title"]));?></strong><br/>Post authored by <?php echo(htmlentities($ppub->metadata["author"]));?>.<br/><a href="/">Return to <?php echo(PUBLICATION_NAME);?> Index</a> | <a href="/feed.rss">Subscribe to <?php echo(SITE_NAME);?> RSS</a> | <a href="?download=true">Download <?php echo(PUBLICATION_NAME);?> PPUB</a>
+        <br/><small>Powered by <a href="https://github.com/Tilo15/php-ppub">php-ppub</a>, styled with <a href="https://vanillacss.com/">Vanilla CSS</a>.</small></p>
     </footer>
     </body>
 </html>

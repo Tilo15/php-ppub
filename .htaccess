@@ -1,2 +1,5 @@
 RewriteEngine on
-RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/(.*)?$  index.php?ppub=$1&asset=$2    [L,QSA]
+RewriteRule vanilla.css - [L]
+RewriteRule feed.rss  index.php    [L,QSA]
+RewriteRule ^([A-Za-z.]+)/?$  index.php?ppub=$1    [L,QSA]
+RewriteRule ^([A-Za-z.]+)/([A-Za-z./]+)/?$  index.php?ppub=$1&asset=$2    [L,QSA]
