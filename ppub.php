@@ -28,7 +28,7 @@ class Ppub {
     public function read_file($file_path) {
         $handle = fopen($file_path, "rb");
         if(fread($handle, 5) != "ppub\n"){
-            throw new Exception("File did not start with magic number", 1);
+            throw new Exception("File did not start with PPUB magic number", 1);
         }
 
         $head_size_string = "";
