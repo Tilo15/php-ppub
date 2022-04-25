@@ -10,6 +10,7 @@ function index_start($type, $arg) {
         <link><?php echo(SITE_URL);?></link>
         <description><?php echo(SITE_TAGLINE);?></description>
         <language><?php echo(SITE_LANGUAGE);?></language>
+        <generator>php-ppub</generator>
 <?php
 }
 
@@ -19,6 +20,9 @@ function index_listing($ppub, $url) {
             <title><?php echo(htmlentities($ppub->metadata["title"]));?></title>
             <link><?php echo(SITE_URL . "/" . $url)?></link>
             <description><?php echo(htmlentities($ppub->metadata["description"]));?></description>
+            <?php if($ppub->metadata["date"] != null) { ?>
+            <pubDate><?php echo(htmlentities((new DateTime($ppub->metadata["date"]))->format("D, d M Y H:i:s O")));?></pubDate>
+            <?php } ?>
         </item>
 <?php
 }
