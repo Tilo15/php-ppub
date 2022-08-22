@@ -158,9 +158,57 @@ if(strpos($accepts, "text/html") !== false && $asset->mimetype == "text/markdown
     content_html($pd->text($ppub->read_asset($asset)));
     content_end($ppub);
 }
+else if(strpos($accepts, "text/html") !== false && $asset->mimetype == "application/x-pvpd") {
+    header("content-type: text/html");
+    include("video_template.php");
+    include("pvpd.php");
+    include("Parsedown.php");
+    $pd = new Parsedown();
+    $video = new Pvpd();
+    $video->from_string($ppub->read_asset($asset));
+    
+    content_start($ppub, $file_name, $video);
+    content_html($pd->text($video->description));
+    content_end($ppub);
+}
 else {
     header("content-type: " . $asset->mimetype);
-    echo($ppub->read_asset($asset));
+
+    if($ppub->can_stream_asset($asset)) {
+        $file_size = $ppub->get_asset_size($asset);
+        $start = 0;
+        $end = $file_size;
+    
+        header('Accept-Ranges: bytes', true);
+    
+        ### Parse Content-Range header for byte offsets, looks like "bytes=11525-" OR "bytes=11525-12451"
+        if( isset($_SERVER['HTTP_RANGE']) && preg_match('%bytes=(\d+)-(\d+)?%i', $_SERVER['HTTP_RANGE'], $match) )
+        {
+            $start = (int)$match[1];
+            $finish_bytes = 0;
+    
+            if( isset($match[2]) ){
+                $finish_bytes = (int)$match[2];
+                $end = $finish_bytes + 1;
+            } else {
+                $finish_bytes = $file_size - 1;
+            }
+        
+            $cr_header = sprintf('Content-Range: bytes %d-%d/%d', $start, $finish_bytes, $file_size);
+        
+            header("HTTP/1.1 206 Partial content");
+            header($cr_header);
+        }
+
+        header(sprintf('Content-Length: %d', $end - $start));
+
+        $ppub->stream_asset($asset, $start, $end);
+    
+    }
+    else {
+        echo($ppub->read_asset($asset));
+    }
+
 }
 
 ?>

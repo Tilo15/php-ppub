@@ -18,7 +18,7 @@ function index_start($index_type, $arg) {
                 padding: 16px;
                 max-width: 100vw;
                 width: 316px;
-                margin: 0px 0px 15px 0px;
+                margin: 0px 0px 15px 15px;
 
             }
             ul.tags {
@@ -31,6 +31,11 @@ function index_start($index_type, $arg) {
             }
             details summary {
                 cursor: pointer;
+            }
+            dd img {
+                width: 33%;
+                margin-top: 0px;
+                margin-bottom: 15px;
             }
             @media screen and (max-width: 75ch) {
                 aside {
@@ -110,7 +115,14 @@ function index_no_content($index_type, $arg) {
 function index_listing($ppub, $url) {
     ?>
             <dt><a href="<?php echo($url);?>"><?php echo(htmlentities($ppub->metadata["title"]));?></a></dt>
-            <dd><?php echo(htmlentities($ppub->metadata["description"]));?></dd>
+            <dd>
+                <?php echo(htmlentities($ppub->metadata["description"]));?>
+                <?php 
+                if($ppub->metadata["poster"] != null) {
+                    echo("<img src=\"" . $url . "/" . $ppub->metadata["poster"] . "\" alt='' />");
+                }
+                ?>
+            </dd>
     <?php
 }
 

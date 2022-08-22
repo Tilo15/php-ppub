@@ -58,6 +58,29 @@ class Ppub {
         return $data;
     }
 
+    public function get_asset_size($asset) {
+        $start_location = $asset->start_location + $this->blob_start;
+        $length = $asset->end_location - $asset->start_location;
+        return $length;
+    }
+
+    public function can_stream_asset($asset) {
+        return !in_array("gzip", $asset->flags);
+    }
+
+    public function stream_asset($asset, $start = 0, $end = -1) {
+        $start_location = $asset->start_location + $this->blob_start + $start;
+        $length = ($end >= 0) ? $asset->end_location - $asset->start_location : $end;
+        fseek($this->handle, $start_location);
+        $pos = 0;
+        while($pos < $length) {
+            $chunksize = min(1024 * 1024, $length - $pos);
+            echo(fread($this->handle, $chunksize));
+            flush();
+            $pos += $chunksize;
+        }
+    }
+
     private function build_asset_list($data) {
         $asset_list = array();
         $lines = explode("\n", $data);

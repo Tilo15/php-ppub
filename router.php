@@ -3,7 +3,7 @@
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Exclude some paths from being rewritten
-if (dirname($path) == '/' && pathinfo($path, PATHINFO_EXTENSION) == 'css') {
+if (dirname($path) == '/' && (pathinfo($path, PATHINFO_EXTENSION) == 'css' || pathinfo($path, PATHINFO_EXTENSION) == 'js')) {
   return false;
 }
 else {
