@@ -149,6 +149,15 @@ else {
     $asset = $ppub->asset_index[$asset];
 }
 
+if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+    if(strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) < filectime(PUBLICATION_DIR . "/" . $file)) {
+        header('HTTP/1.1 304 Not Modified');
+        exit;
+    }
+}
+
+header("Cache-Control: public, max-age=604800");
+
 if(strpos($accepts, "text/html") !== false && $asset->mimetype == "text/markdown") {
     header("content-type: text/html");
     include("content_template.php");
@@ -158,18 +167,25 @@ if(strpos($accepts, "text/html") !== false && $asset->mimetype == "text/markdown
     content_html($pd->text($ppub->read_asset($asset)));
     content_end($ppub);
 }
-else if(strpos($accepts, "text/html") !== false && $asset->mimetype == "application/x-pvpd") {
+else if(strpos($accepts, "text/html") !== false && $asset->mimetype == "application/x-ppvm") {
     header("content-type: text/html");
-    include("video_template.php");
-    include("pvpd.php");
+    include("ppvm.php");
     include("Parsedown.php");
     $pd = new Parsedown();
-    $video = new Pvpd();
+    $video = new Ppvm();
     $video->from_string($ppub->read_asset($asset));
     
-    content_start($ppub, $file_name, $video);
-    content_html($pd->text($video->description));
-    content_end($ppub);
+    if(isset($_GET["embed"])) {
+        include("video_player.php");
+        ppvm_player($ppub, $file_name, $video);
+    }
+    else {
+        include("video_template.php");
+        content_start($ppub, $file_name, $video);
+        $description = $ppub->asset_index[$video->metadata["description"]];
+        content_html($pd->text($ppub->read_asset($description)));
+        content_end($ppub);
+    }
 }
 else {
     header("content-type: " . $asset->mimetype);

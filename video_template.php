@@ -13,25 +13,18 @@ function content_start($ppub, $path, $video) {
         <meta name="author" content="<?php echo(htmlentities($metadata["author"]));?>">
         <link rel="stylesheet" href="<?php echo(SITE_URL);?>/vanilla.css">
         <link rel="alternate" type="application/x-ppub" title="<?php echo(htmlentities($metadata["title"]));?> (as PPUB)" href="?download=true" />
-        <script type="text/javascript" src="<?php echo(SITE_URL);?>/pvpd_player.js"></script>
         <style type="text/css">
-            video {
-                display: block;
-                height: auto; 
-                max-width: 100%; 
+            .player {
+                position: relative;
+                height: 0;
+                padding-bottom: 56.25%;
+                background: #2d2d2d;
             }
-            .additional-contols {
-                background: var(--text-color);
-                padding: 6px;
-                font-size: 12px;
-                color: #ffffff;
-            }
-            .additional-contols a {
-                color: #ffffff;
-            }
-            .additional-control {
-                display: inline-block;
-                margin-right: 8px;
+            .player iframe{
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%;
+                height: 100%;
             }
         </style>
     </head>
@@ -44,33 +37,10 @@ function content_start($ppub, $path, $video) {
         </h1>
     </header>
 
-    <video controls id="player" poster="<?php echo($video->files["poster"]);?>">
-    </video>
-    <div class="additional-contols">
-        <div class="additional-control quality">
-            <label for="quality">Playback Quality: </label>
-            <select name="quality" id="quality-selector" onchange="qualitySelected()">  
-            </select>
-        </div>
-        <div class="additional-control download">
-            <a href="<?php echo($video->files["master"]);?>" download>Download Full Quality Video</a>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-    setup_playback({
-        entries: [
-<?php
-            foreach ($video->entries as $entry) {
-                $entry_asset = $ppub->asset_index[$entry->filename];
-                echo("            { mimetypeWithCodec: \"" . $entry_asset->mimetype . " codecs=\\\"" . $entry->codecs . "\\\"\", relativePath: \"" . $entry->filename . "\", label: \"" . $entry->label . "\" },\n");
-            }
-?>
-        ]
-    });
-    </script>
-
     <?php
+
+    include("video_player.php");
+    generate_embed($path, $video);
 }
 
 function content_html($content) {
@@ -117,5 +87,3 @@ function content_end($ppub) {
 </html>
     <?php
 }
-
-?>
