@@ -2,6 +2,9 @@
 
 
 function setup_playback(description) {
+    document.getElementById("no-script").classList.remove("noscript");
+    document.getElementById("controls").classList.add("javascript");
+
     video_manifest = description;
     console.log(description);
     player = document.getElementById("player");
@@ -34,10 +37,12 @@ function setup_playback(description) {
 function qualitySelected() {
     qualitySelector = document.getElementById("quality-selector");
     player = document.getElementById("player");
-
-    time = player.currentTime;
+    
     paused = player.paused;
+    time = player.currentTime;
     player.src = qualitySelector.value;
+    player.load();
+
     player.currentTime = time;
     if(!paused) {
         player.play();
@@ -51,6 +56,7 @@ function filterOptions(options) {
 
 function findOptimalOptionForScreen(options) {
     screenSize = Math.max(window.screen.width, window.screen.height);
+    screenSize = screenSize * window.devicePixelRatio
     filtered = options.filter(o => o.type === "video" && Math.max(o.metadata.size.split("x")[0], o.metadata.size.split("x")[1]) <= screenSize);
     console.log(filtered);
     if(filtered.length == 0){
@@ -79,6 +85,22 @@ function playStateChanged(playing) {
     else {
         controls.classList.add("paused")
     }
+}
+
+
+var speedTestStart;
+var speed = 0;
+
+function startSpeedTest() {
+    speedTestStart = Date.now();
+}
+
+function speedTestProgress(transferred) {
+    loadTime = Date.now() - speedTestStart;
+    if(loadTime < 1) {
+        loadTime = 1;
+    }
+    speed = transferred / loadTime;
 }
 
 // @license-end
