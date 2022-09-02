@@ -1,5 +1,6 @@
 RewriteEngine on
 RewriteRule vanilla.css - [L]
 RewriteRule index.php - [L]
+RewriteRule ppvm_player.js - [L]
 RewriteRule ^(.+?(?=/))/(.*)/?$  index.php?ppub=$1&asset=$2    [L,QSA]
 RewriteRule ^(.+?(?=$|\/))$  index.php?ppub=$1    [L,QSA]

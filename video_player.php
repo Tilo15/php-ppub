@@ -2,6 +2,13 @@
 
 function ppvm_player($ppub, $path, $video) {
     $metadata = $ppub->metadata;
+    $short_title = $metadata["title"];
+    if(strlen($short_title) > 30) {
+        $short_title = substr($short_title, 0, 30);
+        $short_title .= "…";
+    }
+
+
     ?>
 <!DOCTYPE html>
 <html lang="<?php echo($metadata["language"] ?? SITE_LANGUAGE);?>">
@@ -42,7 +49,7 @@ function ppvm_player($ppub, $path, $video) {
                 gap: 8px;
             }
 
-            body:hover .additional-contols, .paused {
+            body:hover .additional-contols.javascript, .paused.javascript, .additional-contols.noscript {
                 top: 0px;
                 opacity: 1;
             }
@@ -165,12 +172,21 @@ function ppvm_player($ppub, $path, $video) {
     </head>
     <body>
 
-        <video controls id="player" poster="<?php echo($video->metadata["poster"]);?>">
+        <video controls id="player" poster="<?php echo($video->metadata["poster"]);?>" preload="metadata" src="<?php echo($video->metadata["master"]);?>">
         </video>
+
+        <div id="no-script" class="additional-contols noscript">
+            <div class="additional-control site">
+                <a href="<?php echo(SITE_URL);?>/<?php echo($_GET["ppub"]);?>/<?php echo($_GET["asset"]);?>" target="_blank" title="<?php echo(htmlentities($metadata["title"]));?>"><strong><?php echo(htmlentities($short_title));?></strong></a>
+            </div>
+            <div class="additional-control noscript">
+                For the best experience, please enable JavaScript.
+            </div>
+        </div>
 
         <div id="controls" class="additional-contols paused">
             <div class="additional-control site">
-                <a href="<?php echo(SITE_URL);?>/<?php echo($_GET["ppub"]);?>/<?php echo($_GET["asset"]);?>" target="_blank"><strong><?php echo(htmlentities($ppub->metadata["title"]));?></strong></a>
+                <a href="<?php echo(SITE_URL);?>/<?php echo($_GET["ppub"]);?>/<?php echo($_GET["asset"]);?>" target="_blank" title="<?php echo(htmlentities($metadata["title"]));?>"><strong><?php echo(htmlentities($short_title));?></strong></a>
                 <button onclick="showInfo()">Info</button>
                 <button onclick="shareVideo()">Share</button>
                 <button onclick="downloadVideo()">Download</button>

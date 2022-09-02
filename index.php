@@ -211,6 +211,12 @@ else {
             }
         
             $cr_header = sprintf('Content-Range: bytes %d-%d/%d', $start, $finish_bytes, $file_size);
+
+            if($start > $file_size || $end > $file_size) {
+                header("HTTP/1.1 416 Range Not Satisfiable");
+                header($cr_header);
+                exit;
+            }
         
             header("HTTP/1.1 206 Partial content");
             header($cr_header);

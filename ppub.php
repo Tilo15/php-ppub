@@ -70,7 +70,7 @@ class Ppub {
 
     public function stream_asset($asset, $start = 0, $end = -1) {
         $start_location = $asset->start_location + $this->blob_start + $start;
-        $length = ($end >= 0) ? $asset->end_location - $asset->start_location : $end;
+        $length = ($end < 0) ? $asset->end_location - $asset->start_location - $start : $end - $start;
         fseek($this->handle, $start_location);
         $pos = 0;
         while($pos < $length) {
